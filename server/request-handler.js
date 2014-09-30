@@ -6,7 +6,7 @@
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 var url = require("url");
 var messages = {results:[]};
-var querystring = require("querystring")
+var rooms = {results:[]}
 
 exports.handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
@@ -23,7 +23,8 @@ exports.handleRequest = function(request, response) {
   var pathname = url.parse(request.url).path;
   console.log(pathname);
 
-  if (pathname == "/classes/messages") {
+
+  if (pathname === "/classes/messages") {
     if (request.method === "GET") {
       response.writeHead(200, headers);
       response.end(JSON.stringify(messages));
@@ -32,10 +33,21 @@ exports.handleRequest = function(request, response) {
       request.on('data', function(data){
         messages.results.push(JSON.parse(data));
       });
-
       response.writeHead(201, headers);
       response.end();
     }
+  } else if (pathname === "/classes/room1") {
+      if (request.method === "GET") {
+        response.writeHead(200, headers);
+        response.end(JSON.stringify(rooms));
+      }
+      if (request.method === "POST") {
+        request.on('data', function(data){
+          rooms.results.push(JSON.parse(data));
+        });
+        response.writeHead(201, headers);
+        response.end();
+      }
   } else {
     response.writeHead(404, headers);
     response.end();
