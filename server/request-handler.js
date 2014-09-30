@@ -19,9 +19,9 @@ exports.handleRequest = function(request, response) {
 
 
   console.log("Serving request type " + request.method + " for url " + request.url);
-  var pathname = url.parse(request.url).path;
+  var pathname = url.parse(request.url).pathname; // -->/classes/messages
 
-  // if (pathname === "/classes/messages/") {
+  if (pathname === "/classes/messages") {
     if (request.method === "OPTIONS") {
       response.writeHead(201, headers);
       response.end();
@@ -50,10 +50,10 @@ exports.handleRequest = function(request, response) {
   //       response.writeHead(201, headers);
   //       response.end();
   //     }
-  // } else {
-  //   response.writeHead(404, headers);
-  //   response.end();
-  // };
+  } else {
+    response.writeHead(404, headers);
+    response.end();
+  };
 
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
