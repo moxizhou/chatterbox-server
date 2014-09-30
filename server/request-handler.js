@@ -15,17 +15,19 @@ exports.handleRequest = function(request, response) {
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
   var headers = defaultCorsHeaders;
-
   headers['Content-Type'] = "text/plain";
 
 
   console.log("Serving request type " + request.method + " for url " + request.url);
   var pathname = url.parse(request.url).path;
-  console.log(pathname);
 
-
-  if (pathname === "/classes/messages") {
+  // if (pathname === "/classes/messages/") {
+    if (request.method === "OPTIONS") {
+      response.writeHead(201, headers);
+      response.end();
+    }
     if (request.method === "GET") {
+      console.log("GET", messages);
       response.writeHead(200, headers);
       response.end(JSON.stringify(messages));
     }
@@ -36,22 +38,22 @@ exports.handleRequest = function(request, response) {
       response.writeHead(201, headers);
       response.end();
     }
-  } else if (pathname === "/classes/room1") {
-      if (request.method === "GET") {
-        response.writeHead(200, headers);
-        response.end(JSON.stringify(rooms));
-      }
-      if (request.method === "POST") {
-        request.on('data', function(data){
-          rooms.results.push(JSON.parse(data));
-        });
-        response.writeHead(201, headers);
-        response.end();
-      }
-  } else {
-    response.writeHead(404, headers);
-    response.end();
-  };
+  // } else if (pathname === "/classes/room1") {
+  //     if (request.method === "GET") {
+  //       response.writeHead(200, headers);
+  //       response.end(JSON.stringify(rooms));
+  //     }
+  //     if (request.method === "POST") {
+  //       request.on('data', function(data){
+  //         rooms.results.push(JSON.parse(data));
+  //       });
+  //       response.writeHead(201, headers);
+  //       response.end();
+  //     }
+  // } else {
+  //   response.writeHead(404, headers);
+  //   response.end();
+  // };
 
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
