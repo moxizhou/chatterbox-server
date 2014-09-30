@@ -4,23 +4,41 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
+var url = require("url");
+var route = require("./router")
 
-var handleRequest = function(request, response) {
+exports.handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
-
-  console.log("Serving request type " + request.method + " for url " + request.url);
-
-  var statusCode = 200;
-
-  /* Without this line, this server wouldn't work. See the note
-   * below about CORS. */
   var headers = defaultCorsHeaders;
 
   headers['Content-Type'] = "text/plain";
+  var statusCode = 200;
+
+  console.log("Serving request type " + request.method + " for url " + request.url);
+  var pathname = url.parse(request.url).path;
+  var messages = [];
+
+  if (request.url === pathname) {
+    if (request.method === "GET") {
+      response.writeHead(statusCode, headers);
+      //response.write('message');
+      console.log("get this");
+      response.end(JSON.stringify());
+    }
+    if (request.method ===  "POST") {
+      response.writeHead(statusCode, headers);
+      // response.write('message');
+      console.log("get this");
+      response.end("Hello, World!");
+    }
+  }
+
+  /* Without this line, this server wouldn't work. See the note
+   * below about CORS. */
 
   /* .writeHead() tells our server what HTTP status code to send back */
   response.writeHead(statusCode, headers);
