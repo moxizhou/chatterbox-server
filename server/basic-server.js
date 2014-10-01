@@ -27,6 +27,10 @@ app.post("/classes/messages", function(request, response) {
   });
   response.end();
 })
+app.get("*", function(request, response){
+  response.writeHead(404, {'Content-Type': "text/plain"});
+  response.end();
+})
 
 
 var port = 3000;
