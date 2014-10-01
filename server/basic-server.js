@@ -1,37 +1,37 @@
 /* Import node's http module: */
 var http = require("http");
-var handleRequest = require("./request-handler.js")
+// var handleRequest = require("./request-handler.js")
+// var url = require("url");
+
 var url = require("url");
+var messages = {results:[]};
+var express = require("express");
+var app = express();
+
+app.use(function(request, response, next){
+  response.header("access-control-allow-origin", "*");
+  response.header("access-control-allow-methods", "GET, POST, PUT, DELETE, OPTIONS");
+  response.header("access-control-allow-headers", "content-type, accept");
+  response.header("access-control-max-age", 10);
+  next();
+})
+
+app.get("/classes/messages", function(request, response) {
+  response.writeHead(200, {'Content-Type': "text/plain"});
+  response.end(JSON.stringify(messages));
+})
+app.post("/classes/messages", function(request, response) {
+  response.writeHead(201, {'Content-Type': "text/plain"});
+  request.on('data', function(data){
+    messages.results.push(JSON.parse(data));
+  });
+  response.end();
+})
 
 
-
-/* Every server needs to listen on a port with a unique number. The
- * standard port for HTTP servers is port 80, but that port is
- * normally already claimed by another server and/or not accessible
- * so we'll use a higher port number that is not likely to be taken: */
 var port = 3000;
-
-/* For now, since you're running this server on your local machine,
- * we'll have it listen on the IP address 127.0.0.1, which is a
- * special address that always refers to localhost. */
 var ip = "127.0.0.1";
 
-
-/* We use node's http module to create a server. Note, we called it 'server', but
-we could have called it anything (myServer, blah etc.). The function we pass it (handleRequest)
-will, unsurprisingly, handle all incoming requests. (ps: 'handleRequest' is in the 'request-handler' file).
-Lastly, we tell the server we made to listen on the given port and IP. */
-var server = http.createServer(handleRequest.handleRequest);
+var server = http.createServer(app);
 console.log("Listening on http://" + ip + ":" + port);
 server.listen(port, ip);
-
-/* To start this server, run:
-     node basic-server.js
- *  on the command line.
-
- * To connect to the server, load http://127.0.0.1:8080 in your web
- * browser.
-
- * server.listen() will continue running as long as there is the
- * possibility of serving more requests. To stop your server, hit
- * Ctrl-C on the command line. */
